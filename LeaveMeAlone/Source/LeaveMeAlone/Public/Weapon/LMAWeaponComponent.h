@@ -44,6 +44,8 @@ public:
 	void StartReload();
 	// Новая функция для остановки стрельбы
 	void StopFire();
+	UFUNCTION(BlueprintCallable)
+	bool GetCurrentWeaponAmmo(FAmmoWeapon& AmmoWeapon) const;
 		
 private:
 	// Колбек для обработки опустошения обоймы

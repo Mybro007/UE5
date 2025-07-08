@@ -124,3 +124,14 @@ void ULMAWeaponComponent::OnClipEmpty()
 	// Автоматическая перезарядка при опустошении обоймы
 	StartReload();
 }
+
+bool ULMAWeaponComponent::GetCurrentWeaponAmmo(FAmmoWeapon& AmmoWeapon)
+const
+{
+	if (Weapon)
+	{
+		AmmoWeapon = Weapon->GetCurrentAmmoWeapon();
+		return true;
+	}
+	return false;
+}

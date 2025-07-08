@@ -13,6 +13,7 @@ class USkeletalMeshComponent;
 USTRUCT(BlueprintType)
 struct FAmmoWeapon
 {
+public:
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
@@ -67,7 +68,9 @@ protected:
 
 public:
 	virtual void Tick(float DeltaTime) override;
+	FAmmoWeapon GetCurrentAmmoWeapon() const { return CurrentAmmoWeapon; }
 
 private:
 	FAmmoWeapon CurrentAmmoWeapon;
+	
 };
