@@ -85,3 +85,4 @@ bool ALMABaseWeapon::IsClipFull() const
 {
 	return CurrentAmmoWeapon.Bullets == AmmoWeapon.Bullets;
 }
+
