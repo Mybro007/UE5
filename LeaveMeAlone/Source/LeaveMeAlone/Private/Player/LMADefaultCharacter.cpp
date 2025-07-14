@@ -2,6 +2,8 @@
 
 
 #include "Player/LMADefaultCharacter.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
+#include "Components/Widget.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/DecalComponent.h"
@@ -98,10 +100,14 @@ void ALMADefaultCharacter::OnDeath()
 	PlayAnimMontage(DeathMontage);
 	GetCharacterMovement()->DisableMovement();
 	SetLifeSpan(5.0f);
+
 	if (Controller)
 	{
 		Controller->ChangeState(NAME_Spectating);
 	}
+
+	// Устанавливаем таймер для показа экрана смерти через 2 секунды
+	GetWorldTimerManager().SetTimer(DeathScreenTimerHandle, this, &ALMADefaultCharacter::ShowDeathScreen, 2.0f, false);
 }
 
 void ALMADefaultCharacter::RotationPlayerOnCursor()
@@ -198,5 +204,34 @@ void ALMADefaultCharacter::HandleStaminaRecovery()
 	if (bWantsToSprint && CanSprint())
 	{
 		StartSprinting();
+	}
+}
+
+void ALMADefaultCharacter::ShowDeathScreen()
+{
+	if (!IsValid(Controller)) return;
+
+	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	{
+		static ConstructorHelpers::FClassFinder<UUserWidget> DeathScreenFinder(TEXT("/Widgets/UI/WBP_DeathScreen.WBP_DeathScreen_C"));
+
+		if (DeathScreenFinder.Succeeded() && DeathScreenFinder.Class)
+		{
+			UUserWidget* DeathScreen = CreateWidget<UUserWidget>(PlayerController, DeathScreenFinder.Class);
+			if (DeathScreen)
+			{
+				DeathScreen->AddToViewport();
+
+				PlayerController->SetShowMouseCursor(true);
+				FInputModeUIOnly InputMode;
+				InputMode.SetWidgetToFocus(DeathScreen->GetCachedWidget());
+				InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+				PlayerController->SetInputMode(InputMode);
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Failed to find WBP_DeathScreen class!"));
+		}
 	}
 }

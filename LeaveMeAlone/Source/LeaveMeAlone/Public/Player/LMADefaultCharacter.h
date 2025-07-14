@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Weapon/LMAWeaponComponent.h"
+#include "Blueprint/UserWidget.h"
 #include "LMADefaultCharacter.generated.h"
 
 class UCameraComponent;
@@ -67,6 +68,12 @@ protected:
 	// Флаги состояний
 	bool bIsSprinting = false;
 	bool bWantsToSprint = false;
+
+	// Таймер для отложенного показа экрана смерти
+	FTimerHandle DeathScreenTimerHandle;
+
+	// Функция для показа экрана смерти
+	void ShowDeathScreen();
 
 private:
 	float YRotation = -75.0f;
